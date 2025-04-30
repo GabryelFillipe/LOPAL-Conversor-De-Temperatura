@@ -1,5 +1,6 @@
 package br.dev.gabryelfillipe.temperatura.gui;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -33,6 +34,8 @@ public class TelaConversor {
 		Container container = tela.getContentPane();
 		// Obtendo referencia da fonte e tamanho que sera utilizada .
 		Font minhaFonte = new Font("Bold", Font.BOLD, 32);
+		Font fonteResultado = new Font("Bold", Font.BOLD, 24);
+		Font fonteErro = new Font("Bold", Font.BOLD, 18);
 		
 		//  Criar o label Celsius.
 		labelCelsius = new JLabel();
@@ -53,13 +56,25 @@ public class TelaConversor {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 			String celsius = textCelsius.getText();
+			if (!(celsius.indexOf(",") == -1)) { // Substituindo virgula por ponto
+				celsius = celsius.replace(",", ".");
+			}
+			if (!(celsius.indexOf(" ") == -1)) { // Removendo espaços em branco
+				celsius = celsius.replace(" ", "");
+			}
+			String mensagemDeErro = "none";
 			
-			double celsiusDouble = Double.parseDouble(celsius);
+			
+			
 			
 			Temperatura temperatura = new Temperatura();
-			temperatura.setCelsius(celsiusDouble);
+			temperatura.setCelsius(Double.parseDouble(celsius));
+			temperatura.converterParaFahrenheit();
+			double fahrenheit = temperatura.converterParaFahrenheit();
+			String resultado = fahrenheit+"fahrenheit";//transformando o fahrenheit em string
+
+			labelResultado.setText(resultado); // Tornando a temperatura visivel.
 			
-			double temperaturaResult = temperatura.converterParaFahrenheit();
 			
 			
 			}
@@ -69,11 +84,47 @@ public class TelaConversor {
 		buttonKelvin.setText("Kelvin");
 		buttonKelvin.setBounds(215, 110, 185, 30);
 		
+		buttonKelvin.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				String celsius = textCelsius.getText();
+				if (!(celsius.indexOf(",") == -1)) { // Substituindo virgula por ponto
+					celsius = celsius.replace(",", ".");
+				}
+				if (!(celsius.indexOf(" ") == -1)) { // Removendo espaços em branco
+					celsius = celsius.replace(" ", "");
+				}
+				String mensagemDeErro = "none";
+				
+				
+				
+				Temperatura temperatura = new Temperatura();
+				temperatura.setCelsius(Double.parseDouble(celsius));
+				temperatura.converterParaKelvin();
+				double kelvin = temperatura.converterParaKelvin();
+				String resultado = kelvin+"kelvin"; //transformando o kelvin em string
+				labelResultado.setText(resultado); // Tornando a temperatura visivel.
+				
+			}
+		});
+		
+		
 		// Criando o label resultado.
 		labelResultado = new JLabel();
-		labelResultado.setText("Teste!!!");
-		labelResultado.setBounds(150, 140, 205, 50);
-		labelResultado.setFont(minhaFonte);
+
+		labelResultado.setBounds(150, 150, 250, 50);
+		labelResultado.setFont(fonteResultado);
+		
+		
+		labelMensagemErro = new JLabel();
+		labelMensagemErro.setBounds(150, 170, 250, 100);
+		labelMensagemErro.setForeground(Color.red);
+		labelMensagemErro.setText("teste");
+		labelMensagemErro.setFont(fonteErro);
+		
 		
 		// Adicionando os containers.
 		container.add(labelCelsius);
@@ -82,6 +133,7 @@ public class TelaConversor {
 		container.add(labelResultado);
 		container.add(textCelsius);
 		container.add(labelResultado);
+		container.add(labelMensagemErro);
 		
 		
 		tela.setVisible(true);
