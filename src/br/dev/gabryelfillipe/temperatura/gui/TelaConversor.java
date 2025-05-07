@@ -25,7 +25,7 @@ public class TelaConversor {
 		// Criando a minha tela.
 		JFrame tela = new JFrame();
 		tela.setTitle("Conversor De Temperatura");
-		tela.setSize(430, 600);
+		tela.setSize(430, 400);
 		tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tela.setResizable(false);
 		tela.setLayout(null);
@@ -55,28 +55,48 @@ public class TelaConversor {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			String celsius = textCelsius.getText();
-			if (!(celsius.indexOf(",") == -1)) { // Substituindo virgula por ponto
-				celsius = celsius.replace(",", ".");
-			}
-			if (!(celsius.indexOf(" ") == -1)) { // Removendo espaços em branco
-				celsius = celsius.replace(" ", "");
-			}
-			String mensagemDeErro = "none";
-			
-			
-			
-			
-			Temperatura temperatura = new Temperatura();
-			temperatura.setCelsius(Double.parseDouble(celsius));
-			temperatura.converterParaFahrenheit();
-			double fahrenheit = temperatura.converterParaFahrenheit();
-			String resultado = fahrenheit+"fahrenheit";//transformando o fahrenheit em string
+			try {
 
-			labelResultado.setText(resultado); // Tornando a temperatura visivel.
+				labelMensagemErro.setVisible(false);
+				String celsius = textCelsius.getText();
+				String celsius1 = celsius.replace(",", ".");
+				double celsiusDouble = Double.parseDouble(celsius1);
+				
+				
+				if(celsiusDouble >= -271.5) {
+					
+					Temperatura temperatura = new Temperatura();
+					temperatura.setCelsius(Double.parseDouble(celsius));
+					temperatura.converterParaFahrenheit();
+					double fahrenheit = temperatura.converterParaFahrenheit();
+					String resultado = fahrenheit+" Fahrenheit";//transformando o fahrenheit em string
+
+					labelResultado.setText(resultado); // Tornando a temperatura visivel.
+					
+				}else {
+					labelResultado.setVisible(false);
+					// Deixando o resultado invisível
+					labelMensagemErro.setBounds(50, 140, 370, 60);
+					// Definindo localização da mensagem de erro
+					labelMensagemErro.setText("DIGITE UM VALOR CELSIUS VALIDO");
+					// Definindo mensagem de erro
+					labelMensagemErro.setVisible(true);
+				}
 			
+			}catch(NumberFormatException erro) {
+				labelResultado.setVisible(false);
+				// Quando ocorrer um erro o resultado anterior ficará invisível
+				labelMensagemErro.setBounds(50, 160, 370, 90);
+				// Definindo localização da mensagem de erro
+				labelMensagemErro.setText("<html><body style='width: 250px'>FORMATO DIGITADO INVALIDO, O VALOR DE CELSIUS DEVE SER UM NUMERO");
+				// Verificando se celsius é valido para realizar a conversão se não exibir uma
+				// mensagem de erro
 			
-			
+				labelMensagemErro.setVisible(true);
+				// Quando os comandos no try não poderem ser executados o labelMensagemErro será
+				// visivel
+
+			}
 			}
 		});
 		
@@ -89,24 +109,51 @@ public class TelaConversor {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				
-				String celsius = textCelsius.getText();
-				if (!(celsius.indexOf(",") == -1)) { // Substituindo virgula por ponto
-					celsius = celsius.replace(",", ".");
+				try {
+					
+					labelMensagemErro.setVisible(false);
+					String celsius = textCelsius.getText();
+					String celsius1 = celsius.replace(",", ".");
+					double celsiusDouble = Double.parseDouble(celsius1);
+					
+					
+					if(celsiusDouble >= -271.5) {
+						Temperatura temperatura = new Temperatura();
+						temperatura.setCelsius(Double.parseDouble(celsius1));
+						temperatura.converterParaKelvin();
+						double kelvin = temperatura.converterParaKelvin();
+						String resultado = kelvin+" Kelvin"; //transformando o kelvin em string
+						labelResultado.setText(resultado); // Tornando a temperatura visivel.
+						labelResultado.setVisible(true);
+					}else {
+						labelResultado.setVisible(false);
+						// Deixando o resultado invisível
+						labelMensagemErro.setBounds(50, 140, 370, 60);
+						// Definindo localização da mensagem de erro
+						labelMensagemErro.setText("DIGITE UM VALOR CELSIUS VALIDO");
+						// Definindo mensagem de erro
+						labelMensagemErro.setVisible(true);
+					}
+					
+					textCelsius.requestFocus();
+				}catch (NumberFormatException erro) {
+					labelResultado.setVisible(false);
+					// Quando ocorrer um erro o resultado anterior ficará invisível
+					labelMensagemErro.setBounds(50, 160, 370, 90);
+					// Definindo localização da mensagem de erro
+					labelMensagemErro.setText("<html><body style='width: 250px'>FORMATO DIGITADO INVALIDO, O VALOR DE CELSIUS DEVE SER UM NUMERO");
+					// Verificando se celsius é valido para realizar a conversão se não exibir uma
+					// mensagem de erro
+					
+					labelMensagemErro.setVisible(true);
+					// Quando os comandos no try não poderem ser executados o labelMensagemErro será
+					// visivel
+
 				}
-				if (!(celsius.indexOf(" ") == -1)) { // Removendo espaços em branco
-					celsius = celsius.replace(" ", "");
-				}
-				String mensagemDeErro = "none";
 				
 				
 				
-				Temperatura temperatura = new Temperatura();
-				temperatura.setCelsius(Double.parseDouble(celsius));
-				temperatura.converterParaKelvin();
-				double kelvin = temperatura.converterParaKelvin();
-				String resultado = kelvin+"kelvin"; //transformando o kelvin em string
-				labelResultado.setText(resultado); // Tornando a temperatura visivel.
+			
 				
 			}
 		});
@@ -115,14 +162,12 @@ public class TelaConversor {
 		// Criando o label resultado.
 		labelResultado = new JLabel();
 
-		labelResultado.setBounds(150, 150, 250, 50);
+		labelResultado.setBounds(100, 150, 250, 50);
 		labelResultado.setFont(fonteResultado);
 		
 		
 		labelMensagemErro = new JLabel();
-		labelMensagemErro.setBounds(150, 170, 250, 100);
 		labelMensagemErro.setForeground(Color.red);
-		labelMensagemErro.setText("teste");
 		labelMensagemErro.setFont(fonteErro);
 		
 		
